@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Our Breast Cancer Prediction System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='image/about3.avif') }}") no-repeat center center/cover;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: #333;
+            padding: 20px;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(233, 30, 99, 0.25);
+            width: 850px;
+            max-width: 95%;
+            border: 3px solid #e91e63;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(233, 30, 99, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+        
+        h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #e91e63;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff4081, #9c27b0);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 18px;
+            color: #666;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .feature-card {
+            background: linear-gradient(145deg, #fff3f5, #ffe6eb);
+            padding: 25px 20px;
+            border-radius: 12px;
+            border-left: 5px solid #e91e63;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(156, 39, 176, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(233, 30, 99, 0.2);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card h3 {
+            color: #c2185b;
+            margin-top: 0;
+            font-size: 20px;
+            margin-bottom: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-card h3::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #e91e63;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .feature-card p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 0;
+            color: #555;
+            position: relative;
+        }
+        
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 35px;
+            transition: all 0.4s;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 6px 15px rgba(233, 30, 99, 0.35);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-back::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+        
+        .btn-back:hover {
+            background: linear-gradient(135deg, #d81b60, #7b1fa2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.5);
+        }
+        
+        .btn-back:hover::before {
+            left: 100%;
+        }
+        
+        .btn-back i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        center {
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>About Breast Cancer Prediction System</h2>
+        
+        <p class="subtitle">Our advanced AI-powered system helps medical professionals detect and classify breast cancer with high accuracy, enabling early intervention and personalized treatment plans.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Early Detection</h3>
+                <p>Our system uses advanced machine learning models to detect breast cancer in its early stages, helping to save lives through timely diagnosis.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Stage Classification</h3>
+                <p>The system predicts not only malignancy but also stages of cancer progression, aiding doctors in treatment planning.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Patient Data Analysis</h3>
+                <p>Structured patient data is analyzed to understand risk factors such as age, tumor size, menopause status, and medical history.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Image-Based Prediction</h3>
+                <p>Deep learning CNN models are used to classify medical images for accurate identification of cancerous tissues.</p>
+            </div>
+            <div class="feature-card">
+                <h3>High Accuracy</h3>
+                <p>Our models are trained on extensive datasets to ensure reliable predictions with minimal false positives.</p>
+            </div>
+            <div class="feature-card">
+                <h3>User-Friendly Interface</h3>
+                <p>Designed with healthcare professionals in mind, our interface is intuitive and easy to navigate.</p>
+            </div>
+        </div>
+        
+        <center>
+            <a href="{{ url_for('index') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </center>
+    </div>
+</body>
+</html>

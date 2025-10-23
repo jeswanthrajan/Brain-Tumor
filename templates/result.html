@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brain MRI Prediction Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #5cbdb9;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --neutral: #6c757d;
+            --bg: #f4f8fb;
+            --white: #fff;
+            --radius: 18px;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            color: #333;
+        }
+
+        .container {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 3rem;
+            text-align: center;
+            max-width: 750px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .result-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--white);
+            margin: 0 auto 1rem;
+        }
+
+        .icon-normal { background: var(--success); }
+        .icon-tumor { background: var(--error); }
+        .icon-unknown { background: var(--neutral); }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .image-container {
+            margin: 1.5rem 0;
+            background: #eef5ff;
+            padding: 1rem;
+            border-radius: var(--radius);
+        }
+
+        .image-container img {
+            max-width: 260px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .prediction-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            margin-top: 1rem;
+        }
+
+        .text-normal {
+            color: var(--success);
+            border: 2px solid var(--success);
+            background: rgba(76,175,80,0.1);
+        }
+
+        .text-tumor {
+            color: var(--error);
+            border: 2px solid var(--error);
+            background: rgba(244,67,54,0.1);
+        }
+
+        .text-unknown {
+            color: var(--neutral);
+            border: 2px solid var(--neutral);
+            background: rgba(108,117,125,0.1);
+        }
+
+        .confidence-section {
+            margin-top: 1.5rem;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.8rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            width: 0;
+            transition: width 1.2s ease-in-out;
+        }
+
+        .recommendation {
+            text-align: left;
+            margin-top: 2rem;
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .recommendation h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .recommendation p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 111, 165, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-in">
+        {% if prediction == 'Normal' %}
+            <div class="result-icon icon-normal"><i class="fas fa-check-circle"></i></div>
+            <h2>Healthy Brain Detected</h2>
+            <div class="prediction-text text-normal">{{ prediction }}</div>
+        {% elif prediction == '❌ Unknown / Out of domain' %}
+            <div class="result-icon icon-unknown"><i class="fas fa-question-circle"></i></div>
+            <h2>Unrecognized Image</h2>
+            <div class="prediction-text text-unknown">{{ prediction }}</div>
+        {% else %}
+            <div class="result-icon icon-tumor"><i class="fas fa-brain"></i></div>
+            <h2>Tumor Detected</h2>
+            <div class="prediction-text text-tumor">{{ prediction }}</div>
+        {% endif %}
+
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded MRI">
+        </div>
+
+        <div class="confidence-section">
+           
+            <div class="confidence-bar">
+                <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <h3><i class="fas fa-stethoscope"></i> Medical Recommendation</h3>
+            {% if prediction == 'Normal' %}
+                <p>No abnormalities detected in the MRI scan. Continue with routine health check-ups as advised by your healthcare provider.</p>
+            {% elif prediction == '❌ Unknown / Out of domain' %}
+                <p>The uploaded image doesn’t seem to be a valid MRI scan. Please upload a clear and proper MRI brain image for accurate analysis.</p>
+            {% else %}
+                <p>Potential signs of <strong>{{ prediction }}</strong> detected. Please consult a neurologist or oncologist for detailed medical evaluation.</p>
+            {% endif %}
+        </div>
+
+        <div class="buttons">
+            <a href="{{ url_for('predict') }}" class="btn"><i class="fas fa-redo"></i> Analyze Another Image</a>
+            <a href="{{ url_for('index') }}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Animate confidence bar
+        document.addEventListener('DOMContentLoaded', function() {
+            const bar = document.getElementById('confidenceFill');
+            const confidence = {{ confidence|default(0) }};
+            bar.style.width = confidence + '%';
+        });
+    </script>
+</body>
+</html>

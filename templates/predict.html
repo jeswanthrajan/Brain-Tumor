@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload MRI Scan for Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --primary-light: #7b9fd3;
+            --primary-dark: #2c4979;
+            --secondary-color: #5cbdb9;
+            --accent-color: #ff7e5f;
+            --light-accent: #e6f7f6;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(74, 111, 165, 0.05), rgba(92, 189, 185, 0.05));
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Flash messages */
+        .flash {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .flash.success { background: rgba(76, 175, 80, 0.1); color: var(--success); border: 1px solid rgba(76, 175, 80, 0.3); }
+        .flash.error { background: rgba(244, 67, 54, 0.1); color: var(--error); border: 1px solid rgba(244, 67, 54, 0.3); }
+        .flash.warning { background: rgba(255, 152, 0, 0.1); color: var(--warning); border: 1px solid rgba(255, 152, 0, 0.3); }
+
+        /* Upload Form */
+        .file-input-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .file-input {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            border: 2px dashed var(--primary-light);
+            border-radius: var(--border-radius);
+            background: var(--light-accent);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--primary-color);
+        }
+
+        .file-input-label:hover {
+            background: rgba(92, 189, 185, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .file-input-label i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: var(--gradient);
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 111, 165, 0.3);
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Loader */
+        .loading {
+            display: none;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .loading i {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
+            .file-input-label { padding: 2rem 1rem; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload MRI Scan for Analysis</h2>
+        <p class="subtitle">Our AI will analyze your brain MRI scan for potential tumors</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}exclamation-triangle{% endif %}"></i>
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+            <div class="file-input-container">
+                <input type="file" name="file" id="file" class="file-input" accept="image/*" required>
+                <label for="file" class="file-input-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Choose MRI Image</h3>
+                    <p>Click to browse or drag and drop your file here</p>
+                    <p class="file-name" id="file-name">No file selected</p>
+                </label>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-brain"></i> Analyze Image
+            </button>
+
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner"></i> Analyzing image, please wait...
+            </div>
+        </form>
+
+        <a href="{{ url_for('index') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        const fileName = document.getElementById('file-name');
+        const uploadForm = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+
+        fileInput.addEventListener('change', function() {
+            fileName.textContent = this.files.length ? this.files[0].name : 'No file selected';
+        });
+
+        uploadForm.addEventListener('submit', function() {
+            loading.style.display = 'block';
+        });
+
+        // Drag and Drop Support
+        const fileLabel = document.querySelector('.file-input-label');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+            fileLabel.addEventListener(event, e => { e.preventDefault(); e.stopPropagation(); });
+        });
+
+        ['dragenter', 'dragover'].forEach(event => {
+            fileLabel.addEventListener(event, () => {
+                fileLabel.style.background = 'rgba(92, 189, 185, 0.2)';
+                fileLabel.style.borderColor = 'var(--primary-color)';
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(event => {
+            fileLabel.addEventListener(event, () => {
+                fileLabel.style.background = 'var(--light-accent)';
+                fileLabel.style.borderColor = 'var(--primary-light)';
+            });
+        });
+
+        fileLabel.addEventListener('drop', e => {
+            const files = e.dataTransfer.files;
+            fileInput.files = files;
+            fileName.textContent = files.length ? files[0].name : 'No file selected';
+        });
+    </script>
+</body>
+</html>
