@@ -1,2 +1,2 @@
-py -3.11 -m pip install pennylane
-py -3.11 -m pip install pennylane-qiskit
+pip install pennylane
+pip install pennylane-qiskit
