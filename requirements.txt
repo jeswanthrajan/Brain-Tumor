@@ -1,2 +1,11 @@
 pennylane
 pennylane-qiskit
+torch 
+torchvision 
+torchaudio 
+tensorflow 
+Pillow 
+numpy 
+matplotlib 
+tqdm 
+flask
